@@ -37,12 +37,6 @@ def get_counters_from_driver(driver):
     return CountersPanel_counters__U8zc5
 
 
-@retry
-def get_a_tag_from_class(cell):
-    a = cell.find_element_by_tag_name("a")
-    return a
-
-
 for lane in lanes:
     for champion_name in champion_names:
         driver = get_driver(champion_name, lane)
@@ -73,11 +67,12 @@ for lane in lanes:
             for j in range(0, 16):
                 driver.execute_script(
                     "document.getElementsByClassName(\"Panel_data__dtE8F\")[" + str(i) + "].scroll(" + str(j * 890) + ", 0)")
+                time.sleep(0.2)
 
                 Cell_cell__383UV = counter.find_elements_by_class_name(
                     "Cell_cell__383UV")
                 for cell in Cell_cell__383UV:
-                    a = get_a_tag_from_class(cell)
+                    a = cell.find_element_by_tag_name("a")
                     href = a.get_attribute("href")
                     parsed_url = urlparse(href)
                     query = parse_qs(parsed_url.query)
