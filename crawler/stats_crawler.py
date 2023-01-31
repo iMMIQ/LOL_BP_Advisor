@@ -2,10 +2,10 @@ from selenium import webdriver
 from urllib.parse import urlparse, parse_qs
 from retrying import retry
 import csv
-import time
+import json
+import pathlib
 import re
 import requests
-import json
 
 champion_names = []
 
@@ -120,6 +120,7 @@ def get_data(driver):
     return sorted_datas
 
 
-for lane in lanes:
-    for champion_name in champion_names:
-        crawler(champion_name, lane)
+for champion_name in champion_names:
+    for lane in lanes:
+        if not(pathlib.Path("data/" + champion_name + "_" + lane + "_against.csv").exists()) or not(pathlib.Path("data/" + champion_name + "_" + lane + "_synergy.csv").exists()):
+            crawler(champion_name, lane)
