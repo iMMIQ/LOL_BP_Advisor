@@ -19,8 +19,6 @@ for key, value in data.items():
 
 lanes = ['top', 'jungle', 'middle', 'bottom', 'support']
 
-print(champion_names)
-
 for lane in lanes:
     for champion_name in champion_names:
         url = "https://lolalytics.com/lol/" + champion_name + \
@@ -28,6 +26,7 @@ for lane in lanes:
 
         driver = webdriver.Firefox()
         driver.get(url)
+        time.sleep(1)
 
         Wrapper_medium__pU6D8 = driver.find_element_by_class_name(
             "Wrapper_medium__pU6D8")
