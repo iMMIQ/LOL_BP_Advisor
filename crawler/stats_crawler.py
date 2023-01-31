@@ -1,5 +1,6 @@
 from selenium import webdriver
 from urllib.parse import urlparse, parse_qs
+from retrying import retry
 import csv
 import time
 import re
@@ -19,25 +20,30 @@ for key, value in data.items():
 
 lanes = ['top', 'jungle', 'middle', 'bottom', 'support']
 
+
+@retry
+def get_driver(champion_name, lane):
+    url = "https://lolalytics.com/lol/" + champion_name + \
+        "/build/?lane=" + lane + "&tier=all"
+    driver = webdriver.Firefox()
+    driver.get(url)
+    return driver
+
+
+@retry
+def get_counters_from_driver(driver):
+    CountersPanel_counters__U8zc5 = driver.find_elements_by_class_name(
+        "CountersPanel_counters__U8zc5")
+    return CountersPanel_counters__U8zc5
+
+
 for lane in lanes:
     for champion_name in champion_names:
-        url = "https://lolalytics.com/lol/" + champion_name + \
-            "/build/?lane=" + lane + "&tier=all"
-
-        driver = webdriver.Firefox()
-        driver.get(url)
-        time.sleep(1)
-
-        Wrapper_medium__pU6D8 = driver.find_element_by_class_name(
-            "Wrapper_medium__pU6D8")
-        Champion_medium__pD8r9 = driver.find_element_by_class_name(
-            "Champion_medium__pD8r9")
-        CountersPanel_counters__U8zc5 = Champion_medium__pD8r9.find_elements_by_class_name(
-            "CountersPanel_counters__U8zc5")
+        driver = get_driver(champion_name, lane)
+        counters = get_counters_from_driver(driver)
 
         driver.execute_script(
-            "arguments[0].scrollIntoView();", CountersPanel_counters__U8zc5[0])
-        time.sleep(1)
+            "arguments[0].scrollIntoView();", counters[0])
 
         class Data:
             def __init__(self, champion, vslane, win_rate, games):
@@ -54,14 +60,13 @@ for lane in lanes:
 
         datas = []
 
-        for i in range(1, len(CountersPanel_counters__U8zc5) + 1):
-            counter = CountersPanel_counters__U8zc5[i - 1]
+        for i in range(1, len(counters) + 1):
+            counter = counters[i - 1]
             Panel_data__dtE8F = counter.find_element_by_class_name(
                 "Panel_data__dtE8F")
             for j in range(0, 16):
                 driver.execute_script(
                     "document.getElementsByClassName(\"Panel_data__dtE8F\")[" + str(i) + "].scroll(" + str(j * 890) + ", 0)")
-                time.sleep(0.2)
 
                 Cell_cell__383UV = counter.find_elements_by_class_name(
                     "Cell_cell__383UV")
