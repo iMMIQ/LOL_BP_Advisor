@@ -52,5 +52,5 @@ compile_commands.json
 *creator.user*
 
 # data
-crawler/geckodriver.log
+geckodriver.log
 crawler/*.csv
