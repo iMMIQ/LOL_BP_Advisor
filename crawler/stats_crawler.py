@@ -48,7 +48,7 @@ def crawler(champion_name, lane):
 
         sorted_datas = get_data(driver)
 
-        with open(champion_name + "_" + lane + "_against.csv", "w") as csvfile:
+        with open("data/" + champion_name + "_" + lane + "_against.csv", "w") as csvfile:
             writer = csv.writer(csvfile)
             writer.writerow(["champion", "vslane", "win_rate", "games"])
             for data in sorted_datas:
@@ -60,7 +60,7 @@ def crawler(champion_name, lane):
 
         sorted_datas = get_data(driver)
 
-        with open(champion_name + "_" + lane + "_synergy.csv", "w") as csvfile:
+        with open("data/" + champion_name + "_" + lane + "_synergy.csv", "w") as csvfile:
             writer = csv.writer(csvfile)
             writer.writerow(["champion", "lane", "win_rate", "games"])
             for data in sorted_datas:
