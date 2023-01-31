@@ -14,9 +14,12 @@ data = json.loads(response.text)
 
 for key, value in data.items():
     champion_name = value.split("<h3>")[1].split("</h3>")[0]
-    champion_names.append(champion_name.lower().replace(' ', ''))
+    champion_names.append(
+        champion_name.lower().replace(' ', '').replace('\'', '').replace('.', ''))
 
 lanes = ['top', 'jungle', 'middle', 'bottom', 'support']
+
+print(champion_names)
 
 for lane in lanes:
     for champion_name in champion_names:
